@@ -1,0 +1,84 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Device",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/device/ordernew": {
+            "post": {
+                "parameters": [
+                    {
+                        "name": "body",
+                        "schema": {
+                            "$ref": "#/definitions/DeviceRequest"
+                        },
+                        "in": "body",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "order acknowledgement",
+                        "schema": {
+                            "$ref": "#/definitions/DeviceResponse"
+                        }
+                    }
+                },
+                "operationId": "OrderNew"
+            }
+        }
+    },
+    "definitions": {
+        "DeviceRequest": {
+            "title": "Root Type for DeviceRequest",
+            "description": "",
+            "type": "object",
+            "properties": {
+                "caller-id": {
+                    "type": "string"
+                },
+                "msisdn": {
+                    "type": "string"
+                },
+                "brand": {
+                    "type": "string"
+                },
+                "model": {
+                    "type": "string"
+                },
+                "color": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "string"
+                }
+            },
+            "example": {
+                "caller-id": "pam",
+                "msisdn": "441000000",
+                "brand": "samsung",
+                "model": "galaxy",
+                "color": "white",
+                "size": "6-in"
+            }
+        },
+        "DeviceResponse": {
+            "title": "Root Type for DeviceResponse",
+            "description": "",
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string"
+                },
+                "job-id": {
+                    "type": "string"
+                }
+            },
+            "example": {
+                "status": "pending completion",
+                "job-id": "111111"
+            }
+        }
+    }
+}

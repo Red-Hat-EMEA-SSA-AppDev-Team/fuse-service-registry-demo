@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<rests xmlns="http://camel.apache.org/schema/spring">
+    <restConfiguration component="servlet"/>
+    <rest>
+        <post id="OrderNew" uri="/device/ordernew">
+            <param name="body" required="true" type="body"/>
+            <to uri="direct:OrderNew"/>
+        </post>
+    </rest>
+</rests>

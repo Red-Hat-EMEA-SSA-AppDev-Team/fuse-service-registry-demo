@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:cxf="http://camel.apache.org/schema/cxf"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="             http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd             http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd        http://camel.apache.org/schema/spring       http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+
+    <cxf:cxfEndpoint
+        id="fulfillment"
+        address="/fulfillment"
+        serviceClass="org.example.s2.S2"/>
+
+
+    <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
+        <endpoint id="response" uri="dozer:response?sourceModel=org.example.s2.S2Response&amp;targetModel=io.swagger.client.model.DemoData&amp;mappingFile=transformation.xml"/>
+
+   <!-- ATTENTION HERE:
+        The Maven plugin uses GSON's library to generate POJOs,
+        we need to ensure we use the same library -->
+        <restConfiguration apiContextPath="api-docs" bindingMode="json"
+            component="servlet" contextPath="camel" port="8080" jsonDataFormat="json-gson">
+            <apiProperty key="cors" value="true"/>
+            <apiProperty key="api.title" value="My First Camel REST API"/>
+            <apiProperty key="api.version" value="1.0.0"/>
+        </restConfiguration>
+        <rest id="rest-31bebc04-82eb-44ec-a8ad-fb0fdff5bd80" path="/device">
+
+            <post uri="/ordernew"
+                id="orderNew"
+                consumes="application/json"
+                produces="application/json"
+                type="io.swagger.client.model.DeviceRequest">
+                <to uri="direct:main"/>
+            </post>
+
+        </rest>
+
+
+
+        <route id="main">
+            <from uri="direct:main"/>
+            <log message="REST service call received ${body}"/>
+            <to uri="atlas:map/fulfillment-mapping.adm"/>
+            <to uri="direct:call-backend"/>
+            <to uri="atlas:map/response-mapping.adm"/>
+            <removeHeaders pattern="*"/>
+        </route>
+
+
+        <route>
+            <from uri="direct:call-backend"/>
+            <removeHeaders pattern="*"/>
+            <setHeader headerName="CamelDestinationOverrideUrl">
+                <simple>http://{{endpoint.fulfillment.server}}/services/fulfillment</simple>
+            </setHeader>
+            <to uri="cxf:bean:fulfillment"/>
+            <setBody>
+                <simple>${body[0]}</simple>
+            </setBody>
+            <log message="got response from Fulfillment: ${body}"/>
+        </route>
+
+
+    </camelContext>
+</beans>

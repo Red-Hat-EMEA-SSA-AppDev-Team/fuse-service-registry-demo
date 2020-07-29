@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:cxf="http://camel.apache.org/schema/cxf"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="       http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd             http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd        http://camel.apache.org/schema/spring       http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+    <cxf:cxfEndpoint 
+        id="mycxf"
+        address="/fulfillment" 
+        serviceClass="org.example.s2.S2"/>
+
+    <bean class="org.mycompany.Helper" id="helper"/>
+
+    <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
+        <route>
+            <from uri="cxf:bean:mycxf"/>
+            <log message="SOAP received: ${body[0]}"/>
+            <setBody>
+                <simple>bean:helper?method=setResponse</simple>
+            </setBody>
+        </route>
+    </camelContext>
+</beans>
