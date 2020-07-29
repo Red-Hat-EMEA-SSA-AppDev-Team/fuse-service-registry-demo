@@ -52,6 +52,8 @@ The picture below illustrates the different stages where API's are defined, then
 	* Installation Mode: A specific namespace on the cluster > [your_project]
 	* Update Channel: serviceregistry-1.0
 	* Approval Strategy: Manual
+	
+	<br>
 
 	Click *Subscribe*
 
@@ -75,6 +77,8 @@ The picture below illustrates the different stages where API's are defined, then
 	Once the Operator is installed, you can create the Service Registry instance. Navigate to:
 	
 	- Web Console ➡ Installed Operators ➡ Red Hat Integration - Service Registry Operator ➡ Provided APIs ➡ ApicurioRegistry ➡ Create Instance
+
+	<br>
 
 	You'll be shown the YAML definition, in which we need to explicitly include the storage strategy (*Infinispan* in this example). It should look similar to:
 
@@ -108,14 +112,14 @@ The picture below illustrates the different stages where API's are defined, then
 
 Open the UI using the route URL (previous section) in your browser.
 
-From the UI, you can now upload the interfaces needed for the Device Service. This tutorial project includes the interfaces in the following folder:
+From the UI, you can now upload the interfaces needed for the *Device* service. This tutorial project includes the interfaces in the following folder:
 
 	registry-artifacts
 
 where you'll find 2 APIs
 
-- OpenApi Device definition
-- WSDL Fulfillment definition
+- OpenApi *Device* definition
+- WSDL *Fulfillment* definition
 
 Use the following identifiers when you upload the interfaces:
 - device
@@ -144,32 +148,32 @@ Each project contains its own POM file. If we pick for example the REST service 
 
 ```xml
 <plugin>
-	<groupId>io.apicurio</groupId>
-	<artifactId>apicurio-registry-maven-plugin</artifactId>
-	<executions>
-		<execution>
-		<phase>generate-sources</phase>
-		<goals>
-			<goal>download</goal> 
-		</goals>
-		<configuration>
-			<registryUrl>${service.registry.url}</registryUrl>
-			<ids>
-				<param1>device</param1>
-				<param2>fulfillment</param2>
-			</ids>
-			<versions>
-				<device>1</device>
-				<fulfillment>1</fulfillment>
-			</versions>
-			<artifactExtensions>
-				<device>.json</device>
-				<fulfillment>.wsdl</fulfillment>
-			</artifactExtensions>
-			<outputDirectory>${project.build.directory}/ocp-registry</outputDirectory>
-		</configuration>
-		</execution>
-	</executions>
+  <groupId>io.apicurio</groupId>
+  <artifactId>apicurio-registry-maven-plugin</artifactId>
+  <executions>
+    <execution>
+      <phase>generate-sources</phase>
+      <goals>
+       <goal>download</goal> 
+      </goals>
+      <configuration>
+        <registryUrl>${service.registry.url}</registryUrl>
+        <ids>
+          <param1>device</param1>
+          <param2>fulfillment</param2>
+        </ids>
+        <versions>
+          <device>1</device>
+          <fulfillment>1</fulfillment>
+        </versions>
+        <artifactExtensions>
+          <device>.json</device>
+          <fulfillment>.wsdl</fulfillment>
+        </artifactExtensions>
+        <outputDirectory>${project.build.directory}/ocp-registry</outputDirectory>
+      </configuration>
+    </execution>
+  </executions>
 </plugin>
 ```
 
@@ -183,26 +187,26 @@ In the above definition:
 
  The POM file includes 2 other plugins to create the POJO classes from the respective OpenApi and WSDL definitions:
 
- - `camel-restdsl-swagger-plugin` to create REST based POJO classes
- - `cxf-codegen-plugin` to create SOAP based POJO classes
+ - `camel-restdsl-swagger-plugin` to create REST based POJOs
+ - `cxf-codegen-plugin` to create SOAP based POJOs 
 
 <br>
 
-With the above POM configuration, the project is ready to interact with the Service Registry. The rest of the information below provide some implementation details about the example project, and further down you'll find some instructions on how to run them.
+With the above POM configuration, the project is ready to interact with the *Service Registry*. The rest of the information below provide some implementation details about the *Fuse* project, and further down you'll find some instructions on how to run them.
 
 <br>
 
 ---
 
-## JSON to SOAP with AtlasMap
+## JSON to SOAP with *AtlasMap*
 
-In the previous section we showed how the interfaces fetched from the Service Registry are parsed and processed to create POJOs. Camel needs the JAVA objects to handle the JSON data structures as input and needs to produce SOAP data to invoke the backend.
+In the previous section we showed how the interfaces fetched from the *Service Registry* are parsed and processed to create POJOs. *Camel* needs the JAVA objects to handle the JSON data structures as input and needs to produce SOAP data to invoke the backend.
 
-The following section shows how the generated POJOs are used with AtlasMap to transform the input data to compose the backend call, and also to convert the response data back to reply to the client.
+The following section shows how the generated POJOs are used with *AtlasMap* to transform the input data to compose the backend call, and also to convert the response data back to reply to the client.
 
-AtlasMap allows you to graphically define data mappings you can then execute with Camel. You can install in VSCode the AtlasMap extension to visually work with data mappings.
+*AtlasMap* allows you to graphically define data mappings you can then execute with *Camel*. You can install in *VSCode* the *AtlasMap* extension to visually work with data mappings.
 
-The information below will assume you have already some familiarity with AtlasMap. If not, you can learn how to get started with AtlasMap by following this tutorial:
+The information below will assume you have already some familiarity with *AtlasMap*. If not, you can learn how to get started with *AtlasMap* by following this tutorial:
 
 - tutorial: [fuse-tooling-atlasmap](https://gitlab.com/rh-emea-ssa-fuse-tutorial/fuse-tooling-atlasmap#fuse-tooling-with-vscode-and-atlasmap)
 
@@ -210,7 +214,7 @@ The information below will assume you have already some familiarity with AtlasMa
 
 ## Creating AtlasMap Data mappings:
 
-The data transformations in this tutorial use the POJOs created by the Maven plugins. In order to use the java objects with AtlasMap we need to pass a JAR file containing the related Java classes.
+The data transformations in this tutorial use the POJOs created by the *Maven* plugins. In order to use the java objects with *AtlasMap* we need to pass a JAR file containing the related Java classes.
 
 Run the following commands from the `rest-device` project:
 
@@ -219,9 +223,9 @@ mvn package
 mv target/rest-device-1.0.0.jar.original packages.jar
 ```
 
-The above commands create a JAR file `packages.jar` we will import in AtlasMap.
+The above commands create a JAR file `packages.jar` we will import in *AtlasMap*.
 
-Launch the AtlasMap extension from VSCode and import the JAR file as shown in the snapshot below:
+Launch the *AtlasMap* extension from *VSCode* and import the JAR file as shown in the snapshot below:
 
 ![](images/atlasmap-import.png)
 
@@ -281,7 +285,7 @@ The result mapping for the response flow would look as follows:
 
 You can deploy the example services in OpenShift, but for simplicity, we'll show you how to run them in your local environment. Further down you'll find some guidelines on how to deploy in OpenShift.
 
-To run the example Fuse services, ensure you've deployed the Service Registry as indicated in previous sections in the tutorial. Fuse will depend on the Service Registry to download the API contracts.
+To run the example *Fuse* services, ensure you've deployed the *Service Registry* as indicated in previous sections in the tutorial. *Fuse* will depend on the *Service Registry* to download the API contracts.
 
 1. Clone the repository
 
@@ -293,7 +297,7 @@ To run the example Fuse services, ensure you've deployed the Service Registry as
 
 	   soap-fulfillment/pom.xml
 
-	and ensure the following property is referencing your deployed Service Registry in OpenShift
+	and ensure the following property is referencing your deployed *Service Registry* in OpenShift
 
 	```xml
     <properties>
@@ -309,7 +313,7 @@ To run the example Fuse services, ensure you've deployed the Service Registry as
 
 	   mvn
 
-	This action will trigger the Maven plugin to pull the WSDL interface from the Service Registry, then compile, and run the instance locally.
+	This action will trigger the *Maven* plugin to pull the WSDL interface from the *Service Registry*, then compile, and run the instance locally.
 
 1. Configure the REST service
 
@@ -333,11 +337,11 @@ To run the example Fuse services, ensure you've deployed the Service Registry as
 
 	   mvn
 
-	This action will trigger the Maven plugin to pull the OpenApi/WSDL interfaces from the Service Registry, then compile, and run the instance locally.
+	This action will trigger the *Maven* plugin to pull the OpenApi/WSDL interfaces from the *Service Registry*, then compile, and run the instance locally.
 
 1. Test the service.
 
-	You can use a Swagger UI client to send a request. The URL to obtain the Swagger definition would be:
+	You can use a *Swagger* UI client to send a request. The URL to obtain the *Swagger* definition would be:
 
 	   http://localhost:8080/camel/api-docs
 
@@ -371,7 +375,7 @@ To run the example Fuse services, ensure you've deployed the Service Registry as
 
 ## Deploying in OpenShift
 
-If you wish to deploy the Fuse services in OpenShift, find below some useful instructions:
+If you wish to deploy the *Fuse* services in *OpenShift*, find below some useful instructions:
 
 
 1. ### Install Fulfillment Service
