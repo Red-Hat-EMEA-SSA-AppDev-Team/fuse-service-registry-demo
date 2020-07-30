@@ -389,8 +389,7 @@ If you wish to deploy the *Fuse* services in *OpenShift*, find below some useful
 
 	   oc get pods
 	   oc port-forward fulfillment-1-zwj6f 18080
-	   curl http://localhost:18080/services/s2?wsdl
-
+	   curl http://localhost:18080/services/fulfillment?wsdl
 
 1. ### Install Device Service
 
@@ -401,6 +400,5 @@ If you wish to deploy the *Fuse* services in *OpenShift*, find below some useful
 	Verify the services are available
 
 	   oc get pods
-
 	   oc port-forward device-1-mz4xl 8080
 	   curl http://localhost:8080/camel/api-docs
